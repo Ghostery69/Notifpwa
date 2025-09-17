@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FASO-CASH PWA</title>
+  <title>FASO-CASH PWA Test</title>
   <link rel="manifest" href="manifest.json">
   <style>
     body { font-family: Arial, sans-serif; text-align: center; margin: 50px; background: #f4f4f4; }
@@ -13,37 +13,39 @@
   </style>
 </head>
 <body>
-  <h1>💰 FASO-CASH PWA</h1>
-  <p>App installable avec notifications toutes les 30 minutes</p>
+  <h1>💰 FASO-CASH PWA TEST</h1>
+  <p>Notifications toutes les 5 secondes</p>
   <button id="enableNotif">Activer Notifications</button>
 
   <script>
-    // Enregistrement du service worker
+    // Enregistrement du Service Worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js')
-        .then(() => console.log('Service Worker enregistré'))
-        .catch(err => console.log('Erreur SW:', err));
+        .then(() => console.log('Service Worker enregistré ✅'))
+        .catch(err => console.log('Erreur Service Worker :', err));
     }
 
-    // Fonction pour demander la permission de notifications
+    function startNotifications() {
+      new Notification("FASO-CASH", { body: "Notifications activées !", icon: "icon.png" });
+
+      // Notification toutes les 5 secondes
+      setInterval(() => {
+        if (Notification.permission === "granted") {
+          new Notification("Salut !", { body: "Ceci est une notification toutes les 5 secondes", icon: "icon.png" });
+        }
+      }, 5000);
+    }
+
     document.getElementById("enableNotif").addEventListener("click", () => {
       if (Notification.permission !== "granted") {
         Notification.requestPermission().then(permission => {
-          if(permission === "granted") startNotifications();
+          if (permission === "granted") startNotifications();
+          else alert("Tu dois autoriser les notifications !");
         });
       } else {
         startNotifications();
       }
     });
-
-    // Fonction pour lancer notifications toutes les 30mn
-    function startNotifications() {
-      new Notification("FASO-CASH", { body: "Notifications activées !", icon: "icon.png" });
-      // 30 minutes = 30*60*1000 ms
-      setInterval(() => {
-        new Notification("Salut !", { body: "Ceci est une notification de FASO-CASH", icon: "icon.png" });
-      }, 30*60*1000);
-    }
   </script>
 </body>
 </html>
